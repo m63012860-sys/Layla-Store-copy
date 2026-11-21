@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leyla Store | ليلى ستور</title>
+  <meta name="description" content="Leyla Store - Beauty, Cosmetics & Personal Care">
+  <link rel="icon" href="logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== HEADER (ثابت في كل الصفحات) ===================== -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Menu">☰</button>
+    <button class="icon-btn" id="searchBtn" aria-label="Search">🔍</button>
+
+    <a href="#/" class="logo" data-link aria-label="Leyla Store">
+      <img src="logo.png" alt="Leyla Store" class="logo-img">
+    </a>
+
+    <a href="#/cart" class="icon-btn cart-btn" data-link aria-label="Cart">
+      🛒<span class="badge-count" id="cartCount">0</span>
+    </a>
+    <a href="#/orders" class="icon-btn" data-link aria-label="My Orders">📦</a>
+  </div>
+</header>
+
+<!-- ===================== القائمة الجانبية ===================== -->
+<div class="overlay" id="overlay"></div>
+<aside class="side-menu" id="sideMenu" aria-hidden="true">
+  <div class="side-head">
+    <img src="logo.png" alt="Leyla Store" class="side-logo">
+    <button class="icon-btn" id="closeMenu" aria-label="Close">✕</button>
+  </div>
+
+  <nav class="side-body">
+    <h4 class="side-title" data-i18n="navigation">Navigation</h4>
+    <ul class="side-list">
+      <li><a href="#/" data-link data-i18n="home">Home</a></li>
+      <li id="signInLink"><a href="#/auth" data-link data-i18n="signIn">Sign In</a></li>
+    </ul>
+
+    <h4 class="side-title" data-i18n="categories">Categories</h4>
+    <ul class="side-list" id="sideCategories">
+      <!-- يتم توليدها من الجافاسكربت: Boxes, Makeup (فروع), Splash & Lotion, Body Care,
+           Perfumes (فروع), Nails, Hair Care, Offers, Skin Care, Accessories -->
+    </ul>
+
+    <h4 class="side-title" data-i18n="account">Account</h4>
+    <ul class="side-list">
+      <li><a href="#/account" data-link data-i18n="myAccount">My Account</a></li>
+      <li><a href="#/cart" data-link><span data-i18n="cart">Cart</span> <span class="badge-count inline" id="cartCountSide">0</span></a></li>
+      <li><a href="#/orders" data-link data-i18n="myOrders">My Orders</a></li>
+    </ul>
+
+    <h4 class="side-title" data-i18n="language">Language</h4>
+    <div class="lang-switch">
+      <button class="chip" data-lang="en">English</button>
+      <button class="chip" data-lang="ar">العربية</button>
+    </div>
+
+    <h4 class="side-title" data-i18n="mode">Light/Dark Mode</h4>
+    <button class="theme-toggle" id="themeToggleSide" aria-label="Toggle theme">
+      <span class="knob"></span>
+    </button>
+  </nav>
+</aside>
+
+<!-- ===================== شاشة البحث ===================== -->
+<div class="search-screen" id="searchScreen" aria-hidden="true">
+  <div class="search-top">
+    <div class="search-field">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search for products" data-i18n-ph="searchPh" autocomplete="off">
+      <button class="clear-btn" id="searchClear" aria-label="Clear">✕</button>
+    </div>
+    <button class="text-btn" id="searchCancel" data-i18n="cancel">Cancel</button>
+  </div>
+
+  <div class="search-body">
+    <div id="searchDefault">
+      <h4 class="search-label">CATEGORIES</h4>
+      <div class="search-cats" id="searchCats"></div>
+      <a href="#/shop" data-link class="browse-all" data-i18n="browseAll">Browse all products</a>
+    </div>
+    <div id="searchResults" class="search-results" hidden></div>
+  </div>
+</div>
+
+<!-- ===================== المحتوى (صفحات) ===================== -->
+<main id="app">
+
+  <!-- ============ الصفحة الرئيسية ============ -->
+  <section class="page" id="page-home">
+
+    <!-- البانر الرئيسي -->
+    <div class="hero">
+      <div class="hero-content">
+        <h1 data-i18n="heroTitle">Self-love Starts Here</h1>
+        <p data-i18n="heroText">Beauty. Care. Confidence you can feel.</p>
+        <a href="#/shop" data-link class="btn btn-primary" data-i18n="shopNow">Shop Now</a>
+      </div>
+    </div>
+
+    <!-- تسوق زاوية مفضلة لديك -->
+    <section class="block">
+      <div class="block-head">
+        <h2 data-i18n="shopFavorite">Shop Your Favorite Corner 💕</h2>
+        <a href="#/shop" data-link class="link-pink" data-i18n="shopAll">Shop All</a>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="catSlider" aria-label="Previous">‹</button>
+        <div class="slider cat-slider" id="catSlider"></div>
+        <button class="slide-arrow next" data-slider="catSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- وصل حديثًا -->
+    <section class="block">
+      <div class="block-head">
+        <h2 data-i18n="newArrivals">New Arrivals</h2>
+        <a href="#/shop?filter=new" data-link class="btn btn-outline btn-sm" data-i18n="viewMore">View More</a>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="newSlider" aria-label="Previous">‹</button>
+        <div class="slider product-slider" id="newSlider"></div>
+        <button class="slide-arrow next" data-slider="newSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- الخصومات -->
+    <section class="block">
+      <div class="block-head">
+        <h2 data-i18n="discounts">Discounts</h2>
+        <a href="#/shop?category=offers" data-link class="btn btn-outline btn-sm" data-i18n="viewMore">View More</a>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="discountSlider" aria-label="Previous">‹</button>
+        <div class="slider product-slider" id="discountSlider"></div>
+        <button class="slide-arrow next" data-slider="discountSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- الأكثر مبيعًا -->
+    <section class="block">
+      <div class="block-head">
+        <h2 data-i18n="bestSellers">Best Sellers</h2>
+        <a href="#/shop?filter=best" data-link class="btn btn-outline btn-sm" data-i18n="viewMore">View More</a>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="bestSlider" aria-label="Previous">‹</button>
+        <div class="slider product-slider" id="bestSlider"></div>
+        <button class="slide-arrow next" data-slider="bestSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- سلايدر منتجات لكل قسم رئيسي (يتولد من الجافاسكربت) -->
+    <div id="categorySections"></div>
+
+    <!-- آراء عملائنا -->
+    <section class="block reviews-block">
+      <div class="block-head center">
+        <h2 data-i18n="reviewsTitle">What Our Customers Say</h2>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="reviewsSlider" aria-label="Previous">‹</button>
+        <div class="slider reviews-slider" id="reviewsSlider"></div>
+        <button class="slide-arrow next" data-slider="reviewsSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+
+    <!-- فورم شارك تجربتك -->
+    <section class="block">
+      <form class="review-form card" id="reviewForm" novalidate>
+        <h3 data-i18n="shareExp">Share Your Experience</h3>
+
+        <label class="field">
+          <span><span data-i18n="name">Name</span> <b class="req">*</b></span>
+          <input type="text" id="rvName" required>
+        </label>
+
+        <label class="field">
+          <span><span data-i18n="phone">Phone Number</span> <b class="req">*</b> <small data-i18n="phoneHidden">(will not be displayed)</small></span>
+          <input type="tel" id="rvPhone" required inputmode="tel">
+        </label>
+
+        <div class="field">
+          <span data-i18n="rating">Rating</span>
+          <div class="star-input" id="starInput" role="radiogroup">
+            <button type="button" data-v="1">★</button>
+            <button type="button" data-v="2">★</button>
+            <button type="button" data-v="3">★</button>
+            <button type="button" data-v="4">★</button>
+            <button type="button" data-v="5">★</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span><span data-i18n="review">Review</span> <small data-i18n="optional">(optional)</small></span>
+          <textarea id="rvText" maxlength="500" rows="4"></textarea>
+          <small class="char-count"><span id="rvCount">0</span>/500</small>
+        </label>
+
+        <div class="field">
+          <span data-i18n="photos">Photos (up to 3 — PNG, JPG, WebP — max 1MB each)</span>
+          <label class="upload-box">
+            <input type="file" id="rvPhotos" accept="image/png,image/jpeg,image/webp" multiple hidden>
+            <span>📷 <span data-i18n="addPhotos">Add photos</span></span>
+          </label>
+          <div class="photo-previews" id="rvPreviews"></div>
+        </div>
+
+        <p class="form-error" id="rvError" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="submitReview">Share Review</button>
+      </form>
+    </section>
+  </section>
+
+  <!-- ============ المتجر / الأقسام ============ -->
+  <section class="page" id="page-shop" hidden>
+    <nav class="breadcrumb" id="shopBreadcrumb">
+      <a href="#/" data-link data-i18n="home">Home</a> ‹
+      <a href="#/shop" data-link data-i18n="shop">Shop</a>
+      <span id="shopCrumbCat"></span>
+    </nav>
+
+    <div class="shop-toolbar">
+      <div class="shop-count" id="shopCount">Showing 20 of 52 • Page size 20</div>
+      <div class="toolbar-actions">
+        <button class="btn btn-outline btn-sm" id="filtersBtn">
+          ⚙ <span data-i18n="filters">Filters</span>
+          <span class="badge-count inline" id="filtersCount" hidden>0</span>
+        </button>
+        <div class="view-toggle">
+          <button class="icon-btn" id="view1" data-cols="1" aria-label="1 column">▭</button>
+          <button class="icon-btn active" id="view2" data-cols="2" aria-label="2 columns">▥</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="product-grid cols-2" id="shopGrid"></div>
+    <div class="load-more-wrap">
+      <button class="btn btn-outline" id="loadMoreBtn" data-i18n="loadMore">Load more</button>
+    </div>
+  </section>
+
+  <!-- ============ صفحة المنتج ============ -->
+  <section class="page" id="page-product" hidden>
+    <nav class="breadcrumb" id="productBreadcrumb"></nav>
+
+    <div class="product-layout">
+      <div class="gallery">
+        <div class="gallery-main"><img id="galleryMain" src="" alt=""></div>
+        <div class="gallery-thumbs" id="galleryThumbs"></div>
+      </div>
+
+      <div class="product-info">
+        <div class="product-actions-top">
+          <button class="icon-btn" id="favBtn" aria-label="Favorite">🤍</button>
+          <button class="icon-btn" id="shareBtn" aria-label="Share">🔗</button>
+        </div>
+
+        <h1 id="pName" class="p-name"></h1>
+        <a id="pCategory" class="link-pink" href="#/shop" data-link></a>
+        <div class="p-sku">SKU: <span id="pSku"></span></div>
+
+        <div class="p-price">
+          <span id="pPrice" class="price"></span>
+          <span id="pOldPrice" class="old-price" hidden></span>
+          <span id="pBadge" class="badge" hidden></span>
+        </div>
+
+        <div class="stock" id="pStock">In stock, ready to ship</div>
+
+        <!-- اختيارات المنتج (ألوان/أحجام) -->
+        <div id="pOptions" class="options" hidden></div>
+
+        <!-- بوكس الشراء -->
+        <div class="buy-box card">
+          <div class="buy-total"><span data-i18n="total">Total</span>: <strong id="pTotal"></strong></div>
+          <div class="qty">
+            <button type="button" id="qtyMinus" aria-label="Decrease">−</button>
+            <span id="qtyVal">1</span>
+            <button type="button" id="qtyPlus" aria-label="Increase">+</button>
+          </div>
+          <button class="btn btn-primary btn-block" id="addToCartBtn">ADD TO CART</button>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <details class="accordion" open>
+          <summary>DESCRIPTION</summary>
+          <div class="accordion-body" id="pDescription"></div>
+        </details>
+
+        <!-- SHIPPING POLICY -->
+        <details class="accordion">
+          <summary>SHIPPING POLICY</summary>
+          <div class="accordion-body">
+            <ul class="policy-list">
+              <li><b data-i18n="spDelivery">Standard delivery:</b> <span data-i18n="spDeliveryTxt">7-10 business days.</span></li>
+              <li><b data-i18n="spFees">Fees:</b> <span data-i18n="spFeesTxt">Shipping fees are calculated at checkout. Free shipping may apply above a certain amount.</span></li>
+              <li><b data-i18n="spPack">Packaging:</b> <span data-i18n="spPackTxt">Every order is carefully packed to arrive safely.</span></li>
+              <li><b data-i18n="spReq">Delivery requirements:</b> <span data-i18n="spReqTxt">Please provide an accurate address and an active phone number.</span></li>
+              <li><b data-i18n="spTrack">Tracking & notifications:</b> <span data-i18n="spTrackTxt">You will be notified at every stage of your order.</span></li>
+              <li><b data-i18n="spCancel">Cancellation & changes:</b> <span data-i18n="spCancelTxt">Within 24 hours of ordering. No cancellation after shipping.</span></li>
+              <li><b data-i18n="spReturn">Returns:</b> <span data-i18n="spReturnTxt">Within 7 days of delivery, according to the refund policy.</span></li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- زرار ADD TO CART ثابت أثناء السكرول -->
+    <div class="sticky-buy" id="stickyBuy" hidden>
+      <div class="sticky-info">
+        <strong id="stickyName"></strong>
+        <span id="stickyPrice"></span>
+      </div>
+      <button class="btn btn-primary" id="stickyAddBtn">ADD TO CART</button>
+    </div>
+
+    <!-- YOU MAY ALSO LIKE -->
+    <section class="block">
+      <div class="block-head">
+        <h2>YOU MAY ALSO LIKE</h2>
+        <a href="#/shop" data-link class="btn btn-outline btn-sm">VIEW MORE</a>
+      </div>
+      <div class="slider-wrap">
+        <button class="slide-arrow prev" data-slider="relatedSlider" aria-label="Previous">‹</button>
+        <div class="slider product-slider" id="relatedSlider"></div>
+        <button class="slide-arrow next" data-slider="relatedSlider" aria-label="Next">›</button>
+      </div>
+    </section>
+  </section>
+
+  <!-- ============ السلة ============ -->
+  <section class="page" id="page-cart" hidden>
+    <div class="page-head">
+      <h1><span data-i18n="yourCart">Your Cart</span> <small id="cartItemsCount">(0)</small></h1>
+      <div class="dropdown">
+        <button class="btn btn-outline btn-sm" id="cartActionsBtn" data-i18n="cartActions">Cart Actions</button>
+        <div class="dropdown-menu" id="cartActionsMenu" hidden>
+          <button id="shareCartBtn" data-i18n="shareCart">Share Cart</button>
+          <button id="exportCartBtn" data-i18n="exportCart">Export Cart</button>
+          <button id="importCartBtn2" data-i18n="importCart">Import Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- السلة فاضية -->
+    <div class="empty-state" id="cartEmpty">
+      <div class="empty-icon">🛒</div>
+      <p data-i18n="cartEmpty">Your cart is empty</p>
+      <a href="#/shop" data-link class="btn btn-primary" data-i18n="continueShopping">Continue Shopping</a>
+      <button class="btn btn-outline" id="importCartBtn" data-i18n="importCart">Import Cart</button>
+    </div>
+
+    <!-- السلة وفيها منتجات -->
+    <div class="cart-layout" id="cartFull" hidden>
+      <div class="cart-items" id="cartItems"></div>
+      <aside class="cart-summary card">
+        <h3 data-i18n="orderSummary">Order Summary</h3>
+        <div class="sum-row"><span data-i18n="subtotal">Subtotal</span><strong id="cartSubtotal">0</strong></div>
+        <p class="muted" data-i18n="shippingAtCheckout">Shipping is calculated at checkout.</p>
+        <a href="#/checkout" data-link class="btn btn-primary btn-block" data-i18n="checkout">Checkout</a>
+        <a href="#/shop" data-link class="btn btn-outline btn-block" data-i18n="continueShopping">Continue Shopping</a>
+      </aside>
+    </div>
+    <input type="file" id="importCartFile" accept=".json,application/json" hidden>
+  </section>
+
+  <!-- ============ الحساب /auth ============ -->
+  <section class="page" id="page-auth" hidden>
+    <div class="auth-card card">
+      <div class="tabs">
+        <button class="tab active" data-tab="signin" data-i18n="signInTab">Sign in</button>
+        <button class="tab" data-tab="signup" data-i18n="signUpTab">Sign up</button>
+      </div>
+
+      <button class="btn btn-google btn-block" id="googleBtn">
+        <span class="g-logo">G</span> <span data-i18n="continueGoogle">Continue with Google</span>
+      </button>
+      <div class="divider"><span data-i18n="or">or</span></div>
+
+      <!-- Sign in -->
+      <form id="signinForm" class="auth-form" novalidate>
+        <label class="field">
+          <span data-i18n="email">Email</span>
+          <input type="email" id="siEmail" required autocomplete="email">
+        </label>
+        <label class="field">
+          <span data-i18n="password">Password</span>
+          <div class="pass-wrap">
+            <input type="password" id="siPass" required autocomplete="current-password">
+            <button type="button" class="eye" data-eye="siPass" aria-label="Show password">👁</button>
+          </div>
+        </label>
+        <a href="#" class="link-pink small" id="forgotLink" data-i18n="forgot">Forgot password?</a>
+        <p class="form-error" id="siError" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="signInBtn">Sign in</button>
+      </form>
+
+      <!-- Sign up -->
+      <form id="signupForm" class="auth-form" hidden novalidate>
+        <label class="field">
+          <span data-i18n="name">Name</span>
+          <input type="text" id="suName" required autocomplete="name">
+        </label>
+        <label class="field">
+          <span data-i18n="email">Email</span>
+          <input type="email" id="suEmail" required autocomplete="email">
+        </label>
+        <label class="field">
+          <span data-i18n="phone">Phone Number</span>
+          <input type="tel" id="suPhone" required autocomplete="tel">
+        </label>
+        <label class="field">
+          <span data-i18n="password">Password</span>
+          <div class="pass-wrap">
+            <input type="password" id="suPass" required autocomplete="new-password">
+            <button type="button" class="eye" data-eye="suPass" aria-label="Show password">👁</button>
+          </div>
+        </label>
+        <p class="form-error" id="suError" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="signUpBtn">Create account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ حسابي ============ -->
+  <section class="page" id="page-account" hidden>
+    <div class="page-head"><h1 data-i18n="myAccount">My Account</h1></div>
+    <div class="card account-card" id="accountBox">
+      <div class="account-row"><span data-i18n="name">Name</span><strong id="accName">-</strong></div>
+      <div class="account-row"><span data-i18n="email">Email</span><strong id="accEmail">-</strong></div>
+      <div class="account-row"><span data-i18n="phone">Phone Number</span><strong id="accPhone">-</strong></div>
+      <button class="btn btn-outline" id="signOutBtn" data-i18n="signOut">Sign out</button>
+    </div>
+  </section>
+
+  <!-- ============ إتمام الطلب ============ -->
+  <section class="page" id="page-checkout" hidden>
+    <div class="page-head"><h1 data-i18n="checkout">Checkout</h1></div>
+
+    <div class="steps">
+      <div class="step active" id="stepDot1"><b>1</b><span data-i18n="stepShipping">Shipping Info</span></div>
+      <div class="step-line"></div>
+      <div class="step" id="stepDot2"><b>2</b><span data-i18n="stepReview">Review & Payment</span></div>
+    </div>
+
+    <div class="checkout-layout">
+      <div class="checkout-main">
+
+        <!-- الخطوة 1: معلومات الشحن -->
+        <form class="card" id="shippingForm" novalidate>
+          <h3 data-i18n="shippingAddress">Shipping Address</h3>
+          <div class="form-grid">
+            <label class="field full"><span data-i18n="fullName">Full Name</span><input type="text" id="shName" required></label>
+            <label class="field"><span data-i18n="area">Area</span><input type="text" id="shArea" required></label>
+            <label class="field"><span data-i18n="district">District</span><input type="text" id="shDistrict" required></label>
+            <label class="field full"><span data-i18n="street">Street</span><input type="text" id="shStreet" required></label>
+            <label class="field"><span data-i18n="building">Building</span><input type="text" id="shBuilding" required></label>
+            <label class="field"><span data-i18n="floor">Floor</span><input type="text" id="shFloor"></label>
+            <label class="field"><span data-i18n="apartment">Apartment</span><input type="text" id="shApt"></label>
+            <label class="field"><span data-i18n="governorate">Governorate</span><select id="shGov" required></select></label>
+            <label class="field"><span data-i18n="country">Country</span><input type="text" id="shCountry" value="Egypt" readonly></label>
+          </div>
+
+          <h3 data-i18n="contactInfo">Contact Information</h3>
+          <div class="form-grid">
+            <label class="field"><span data-i18n="phone">Phone Number</span><input type="tel" id="shPhone" required></label>
+            <label class="field"><span data-i18n="email">Email</span><input type="email" id="shEmail" required></label>
+          </div>
+
+          <h3 data-i18n="fulfillment">Fulfillment</h3>
+          <div class="radio-group">
+            <label class="radio-card"><input type="radio" name="fulfillment" value="delivery" checked><span data-i18n="delivery">Delivery</span></label>
+            <label class="radio-card"><input type="radio" name="fulfillment" value="pickup"><span data-i18n="pickup">Pick up</span></label>
+          </div>
+
+          <p class="form-error" id="shError" hidden></p>
+          <button type="submit" class="btn btn-primary btn-block" data-i18n="continueToPayment">Continue to payment</button>
+        </form>
+
+        <!-- الخطوة 2: مراجعة الطلب والدفع -->
+        <div id="reviewStep" hidden>
+          <button class="btn btn-outline btn-sm" id="backToShipping" data-i18n="backToShipping">Back to Shipping Info</button>
+
+          <div class="card">
+            <h3 data-i18n="paymentMethod">Payment Method</h3>
+            <div class="radio-group">
+              <label class="radio-card"><input type="radio" name="payMethod" value="online" checked><span data-i18n="onlinePayment">Online Payment (cards or e-wallets)</span></label>
+              <label class="radio-card"><input type="radio" name="payMethod" value="cod"><span data-i18n="cod">Cash on Delivery</span></label>
+            </div>
+
+            <h3 data-i18n="paymentOption">Payment Option</h3>
+            <div class="radio-group">
+              <label class="radio-card">
+                <input type="radio" name="payOption" value="deposit" checked>
+                <span><b data-i18n="payDeposit">Pay Deposit</b> <small id="depositHint"></small></span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="payOption" value="full">
+                <span><b data-i18n="payFull">Pay Full Amount</b></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="card">
+            <label class="check"><input type="checkbox" id="agreePrivacy"> <span><span data-i18n="iAgree">I agree to the</span> <a href="#/page/privacy" data-link data-i18n="privacy">Privacy Policy</a></span></label>
+            <label class="check"><input type="checkbox" id="agreeTerms"> <span><span data-i18n="iAgree">I agree to the</span> <a href="#/page/terms" data-link data-i18n="terms">Terms of Service</a></span></label>
+            <label class="check"><input type="checkbox" id="agreeRefund"> <span><span data-i18n="iAgree">I agree to the</span> <a href="#/page/refund" data-link data-i18n="refund">Refund Policy</a></span></label>
+            <label class="check"><input type="checkbox" id="agreeShipping"> <span><span data-i18n="iAgree">I agree to the</span> <a href="#/page/shipping" data-link data-i18n="shippingPolicy">Shipping Policy</a></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ملخص الطلب -->
+      <aside class="card checkout-summary">
+        <h3 data-i18n="orderSummary">Order Summary</h3>
+        <div class="sum-row"><span data-i18n="subtotal">Subtotal</span><strong id="sumSubtotal">0</strong></div>
+        <details class="sum-addons">
+          <summary data-i18n="addons">Add-ons</summary>
+          <div id="sumAddons" class="muted">-</div>
+        </details>
+        <div class="sum-row"><span data-i18n="shipping">Shipping</span><strong id="sumShipping">0</strong></div>
+        <div class="sum-row total"><span data-i18n="total">Total</span><strong id="sumTotal">0</strong></div>
+        <div class="sum-row" id="sumDepositRow"><span data-i18n="depositAmount">Deposit amount</span><strong id="sumDeposit">0</strong></div>
+        <p class="form-error" id="payError" hidden></p>
+        <button class="btn btn-primary btn-block" id="payBtn" disabled>Pay Deposit EGP ...</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ بوابة الدفع (Paymob - صفحة منفصلة) ============ -->
+  <section class="page" id="page-pay" hidden>
+    <div class="pay-card card">
+      <div class="pay-head">
+        <strong id="payMerchant">Leyla Store</strong>
+        <div class="pay-amount" id="payAmount">0 EGP</div>
+        <div class="secure">🔒 <span data-i18n="securePay">Secure payment</span></div>
+        <button class="link-pink small" id="payDetailsBtn" data-i18n="viewOrderDetails">View order details</button>
+        <div id="payDetails" class="muted" hidden></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-paytab="card" data-i18n="card">Card</button>
+        <button class="tab" data-paytab="wallet" data-i18n="wallet">Wallet</button>
+      </div>
+
+      <form id="payCardForm" novalidate>
+        <label class="field"><span data-i18n="cardNumber">Card number</span><input type="text" id="cardNum" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000"></label>
+        <div class="form-grid">
+          <label class="field"><span data-i18n="expiry">MM / YY</span><input type="text" id="cardExp" inputmode="numeric" maxlength="5" placeholder="MM/YY"></label>
+          <label class="field"><span>CVV</span><input type="password" id="cardCvv" inputmode="numeric" maxlength="4" placeholder="•••"></label>
+        </div>
+        <label class="switch-row">
+          <span data-i18n="instantRefund">Enable instant refund</span>
+          <input type="checkbox" id="instantRefund">
+        </label>
+        <button type="submit" class="btn btn-primary btn-block" id="payCardBtn"></button>
+      </form>
+
+      <form id="payWalletForm" hidden novalidate>
+        <label class="field">
+          <span data-i18n="walletNumber">Wallet number</span>
+          <div class="phone-wrap"><span class="cc">+20</span><input type="tel" id="walletNum" inputmode="tel" placeholder="10XXXXXXXX"></div>
+        </label>
+        <p class="muted small" data-i18n="walletNetworks">Accepted: Vodafone Cash, WE Pay, Meezah, Orange Cash, Etisalat Cash</p>
+        <button type="submit" class="btn btn-primary btn-block" id="payWalletBtn"></button>
+      </form>
+
+      <div class="powered">Powered by Paymob</div>
+    </div>
+  </section>
+
+  <!-- ============ صفحة الشكر بعد إتمام الطلب ============ -->
+  <section class="page" id="page-thanks" hidden>
+    <div class="empty-state">
+      <div class="empty-icon">💕</div>
+      <h1 data-i18n="thanksTitle">Thank you for your order!</h1>
+      <p><span data-i18n="orderNumber">Order number</span>: <b id="thanksOrderNo">#</b></p>
+      <p class="muted" data-i18n="thanksText">We will contact you shortly to confirm your order.</p>
+      <a href="#/orders" data-link class="btn btn-primary" data-i18n="myOrders">My Orders</a>
+      <a href="#/" data-link class="btn btn-outline" data-i18n="home">Home</a>
+    </div>
+  </section>
+
+  <!-- ============ طلباتي ============ -->
+  <section class="page" id="page-orders" hidden>
+    <div class="page-head">
+      <h1><span data-i18n="myOrders">My Orders</span> <small id="ordersTotal">(0)</small></h1>
+    </div>
+
+    <div class="orders-toolbar">
+      <div class="search-field small">
+        <span>🔍</span>
+        <input type="text" id="orderSearch" placeholder="#ABCD123" autocomplete="off">
+      </div>
+      <button class="btn btn-outline btn-sm" id="orderFiltersBtn">⚙ <span data-i18n="filters">Filters</span></button>
+      <div class="view-toggle" id="ordersViewToggle">
+        <button class="icon-btn active" data-oview="large" aria-label="Large cards">▭</button>
+        <button class="icon-btn" data-oview="small" aria-label="Small cards">▦</button>
+        <button class="icon-btn" data-oview="table" aria-label="Table">☰</button>
+      </div>
+    </div>
+
+    <div id="ordersList" class="orders-list"></div>
+    <div class="empty-state" id="ordersEmpty" hidden>
+      <div class="empty-icon">📦</div>
+      <p data-i18n="noOrders">You have no orders yet</p>
+      <a href="#/shop" data-link class="btn btn-primary" data-i18n="shopNow">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- ============ صفحات المعلومات (About / Contact / FAQs / Posts / Link Hub / السياسات) ============ -->
+  <section class="page" id="page-info" hidden>
+    <div class="page-head"><h1 id="infoTitle"></h1></div>
+    <div class="card info-body" id="infoBody"></div>
+  </section>
+
+  <!-- ============ 404 ============ -->
+  <section class="page" id="page-404" hidden>
+    <div class="empty-state">
+      <div class="empty-icon">🌸</div>
+      <h1>404</h1>
+      <a href="#/" data-link class="btn btn-primary" data-i18n="home">Home</a>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== نافذة فلاتر المنتجات ===================== -->
+<div class="drawer" id="filtersDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3 data-i18n="filters">Filters</h3>
+    <button class="icon-btn" data-close="filtersDrawer" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="filter-group">
+      <h4 data-i18n="sortBy">Sort by</h4>
+      <select id="fSort">
+        <option value="newest" data-i18n="sortNewest">Newest</option>
+        <option value="priceAsc" data-i18n="sortPriceAsc">Price: low to high</option>
+        <option value="priceDesc" data-i18n="sortPriceDesc">Price: high to low</option>
+        <option value="nameAsc" data-i18n="sortName">Name A-Z</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <h4 data-i18n="category">Category</h4>
+      <div id="fCategories" class="chips"></div>
+    </div>
+    <div class="filter-group">
+      <h4 data-i18n="priceRange">Price range</h4>
+      <div class="form-grid">
+        <input type="number" id="fMin" min="0" placeholder="Min">
+        <input type="number" id="fMax" min="0" placeholder="Max">
+      </div>
+    </div>
+    <div class="filter-group">
+      <label class="check"><input type="checkbox" id="fInStock"> <span data-i18n="inStockOnly">In stock only</span></label>
+      <label class="check"><input type="checkbox" id="fOnSale"> <span data-i18n="onSaleOnly">On sale only</span></label>
+      <label class="check"><input type="checkbox" id="fNew"> <span data-i18n="newOnly">New arrivals only</span></label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-outline" id="fReset" data-i18n="resetAll">Reset All</button>
+    <button class="btn btn-primary" id="fApply" data-i18n="applyFilters">Apply Filters</button>
+  </div>
+</div>
+
+<!-- ===================== نافذة فلاتر الطلبات ===================== -->
+<div class="drawer" id="orderFiltersDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3 data-i18n="orderFilters">Order Filters</h3>
+    <button class="icon-btn" data-close="orderFiltersDrawer" aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="filter-group">
+      <h4>Sort Order</h4>
+      <select id="ofSort">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <h4>Order Statuses</h4>
+      <div class="chips" id="ofStatuses">
+        <label class="chip-check"><input type="checkbox" value="cancelled"><span>Cancelled</span></label>
+        <label class="chip-check"><input type="checkbox" value="confirmed"><span>Confirmed</span></label>
+        <label class="chip-check"><input type="checkbox" value="delivered"><span>Delivered</span></label>
+        <label class="chip-check"><input type="checkbox" value="out_for_delivery"><span>Out for Delivery</span></label>
+        <label class="chip-check"><input type="checkbox" value="pending"><span>Pending</span></label>
+        <label class="chip-check"><input type="checkbox" value="processing"><span>Processing</span></label>
+        <label class="chip-check"><input type="checkbox" value="ready_for_pickup"><span>Ready for Pick Up</span></label>
+        <label class="chip-check"><input type="checkbox" value="refunded"><span>Refunded</span></label>
+        <label class="chip-check"><input type="checkbox" value="shipped"><span>Shipped</span></label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <h4>Payment Statuses</h4>
+      <div class="chips" id="ofPayStatuses">
+        <label class="chip-check"><input type="checkbox" value="cancelled"><span>Cancelled</span></label>
+        <label class="chip-check"><input type="checkbox" value="completed"><span>Completed</span></label>
+        <label class="chip-check"><input type="checkbox" value="pending"><span>Pending</span></label>
+        <label class="chip-check"><input type="checkbox" value="partial"><span>Deposit Paid</span></label>
+        <label class="chip-check"><input type="checkbox" value="refunded"><span>Refunded</span></label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <h4>Fulfillment</h4>
+      <div class="chips" id="ofFulfillment">
+        <label class="chip-check"><input type="checkbox" value="delivery"><span>Delivery</span></label>
+        <label class="chip-check"><input type="checkbox" value="pickup"><span>Pick up</span></label>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <h4>Creation Date &amp; Time Range</h4>
+      <label class="field"><span>From</span><input type="datetime-local" id="ofFrom"></label>
+      <div class="inline-btns">
+        <button type="button" class="chip" id="ofFromStart">Start of Day</button>
+        <button type="button" class="chip" id="ofFromEnd">End of Day</button>
+      </div>
+      <label class="field"><span>To</span><input type="datetime-local" id="ofTo"></label>
+      <div class="inline-btns">
+        <button type="button" class="chip" id="ofToStart">Start of Day</button>
+        <button type="button" class="chip" id="ofToEnd">End of Day</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <h4>Location</h4>
+      <label class="field"><span>Governorate</span><select id="ofGov"><option value="">All</option></select></label>
+      <label class="field"><span>Area</span><input type="text" id="ofArea"></label>
+      <label class="field"><span>District</span><input type="text" id="ofDistrict"></label>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <button class="btn btn-outline" id="ofReset">Reset All</button>
+    <button class="btn btn-outline" data-close="orderFiltersDrawer">Cancel</button>
+    <button class="btn btn-primary" id="ofApply">Apply Filters</button>
+  </div>
+</div>
+
+<!-- ===================== نافذة اختيار الخيارات (Select Options) ===================== -->
+<div class="modal" id="optionsModal" aria-hidden="true">
+  <div class="modal-box">
+    <button class="icon-btn modal-close" data-close="optionsModal" aria-label="Close">✕</button>
+    <div class="modal-product">
+      <img id="omImg" src="" alt="">
+      <div>
+        <h3 id="omName"></h3>
+        <div id="omPrice" class="price"></div>
+      </div>
+    </div>
+    <div id="omOptions" class="options"></div>
+    <div class="qty center">
+      <button type="button" id="omMinus" aria-label="Decrease">−</button>
+      <span id="omQty">1</span>
+      <button type="button" id="omPlus" aria-label="Increase">+</button>
+    </div>
+    <p class="form-error" id="omError" hidden></p>
+    <button class="btn btn-primary btn-block" id="omAdd" data-i18n="addToCart">Add to Cart</button>
+  </div>
+</div>
+
+<!-- ===================== Toast ===================== -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ===================== الفوتر ===================== -->
+<footer class="site-footer">
+  <div class="footer-grid">
+    <div class="footer-col">
+      <img src="logo.png" alt="Leyla Store" class="footer-logo">
+      <p class="muted" data-i18n="footerTag">Beauty. Care. Confidence you can feel.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>COMPANY</h4>
+      <ul>
+        <li><a href="#/page/about" data-link>About Leyla Store</a></li>
+        <li><a href="#/page/linkhub" data-link>Link Hub</a></li>
+        <li><a href="#/page/contact" data-link>Contact Us</a></li>
+        <li><a href="#/page/faqs" data-link>FAQs</a></li>
+        <li><a href="#/page/posts" data-link>Posts</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>SUPPORT</h4>
+      <ul>
+        <li><a href="#/page/privacy" data-link>Privacy Policy</a></li>
+        <li><a href="#/page/terms" data-link>Terms of Service</a></li>
+        <li><a href="#/page/refund" data-link>Refund Policy</a></li>
+        <li><a href="#/page/shipping" data-link>Shipping Policy</a></li>
+        <li><a href="#/page/cancel" data-link>Cancel an Order</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4 data-i18n="contactUs">Contact Us</h4>
+      <ul>
+        <li>✉ <a href="mailto:info@leylastore.com" id="footEmail">info@leylastore.com</a></li>
+        <li>☎ <a href="tel:+200000000000" id="footPhone" dir="ltr">+20 000 000 0000</a></li>
+      </ul>
+      <h4 data-i18n="locations">LOCATIONS</h4>
+      <p class="muted" data-i18n="onlineOnly">ONLINE STORE</p>
+    </div>
+  </div>
+
+  <div class="footer-mid">
+    <div class="theme-row">
+      <span data-i18n="mode">Light/Dark Mode</span>
+      <button class="theme-toggle" id="themeToggleFooter" aria-label="Toggle theme"><span class="knob"></span></button>
+    </div>
+    <div class="socials">
+      <a href="#" target="_blank" rel="noopener" aria-label="TikTok" id="socTiktok">TikTok</a>
+      <a href="#" target="_blank" rel="noopener" aria-label="Instagram" id="socInsta">Instagram</a>
+      <a href="#" target="_blank" rel="noopener" aria-label="Facebook" id="socFb">Facebook</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>Made with 💕 for every girl at Leyla Store</p>
+    <p>© <span id="year">2026</span> Leyla Store</p>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
